@@ -1,17 +1,28 @@
-; set teletype mode for 0x10 screen interrupt
-mov ah, 0x0e 
+[BITS 16]
+; set memory offset
+[org 0x7c00]
 
-; set character which should be printed by 0x10 screen interrupt
-mov al, 'H' 
-; print set character
-int 0x10
+; set screen interrupt mode
+mov ah, 0x0e
 
-; set print another character
-mov al, 'i'
-int 0x10
+; set stack pointers
+mov bp, 0x8000
+mov sp, bp
+
+call rm_print_nl
+
+mov bx, RM_BOOT_MSG
+call rm_println
+
+; set variables
+RM_BOOT_MSG:
+    db "Starting in real mode...", 0
 
 ; infinite loop
 jmp $ 
+
+; imports after infinite loop so that they don't get executed on load
+%include "src/rm/print.asm"
 
 ; fill with zeros
 times 510-($-$$) db 0
