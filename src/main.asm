@@ -9,10 +9,8 @@ mov ah, 0x0e
 mov bp, 0x8000
 mov sp, bp
 
-call rm_print_nl
-
 mov bx, RM_BOOT_MSG
-call rm_println
+call rm_print
 
 ; set variables
 RM_BOOT_MSG:
