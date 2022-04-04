@@ -1,4 +1,6 @@
 ; Print the string which is referenced in 'bx'
+; Print the character at the address in 'bx', repeat so for the nex characters 
+; until a null character is found
 rm_print:
     ; Save register contents
     pusha
@@ -27,6 +29,7 @@ rm_print_loop:
     ; Loop again
     jmp rm_print_loop
 
+; Finish up the print function
 rm_print_end:
     ; Return saved register contents
     popa
@@ -67,85 +70,50 @@ rm_println:
     ; Done
     ret
 
-; Print the number stored in 'bx' in hexadecimal
+; receiving the data in 'dx'
+; For the examples we'll assume that we're called with dx=0x1234
 rm_print_hex:
-    ; Save register contents
     pusha
 
-    ; Initialize counter
-    mov cx, 0x0
+    mov cx, 0 ; our index variable
 
-    ; Begin looping
-    jmp rm_print_hex_loop
-
-rm_print_hex_loop:
-    ; Check if we have already looped 4 times
-    cmp cx, 4
-    je rm_print_hex_end
+; Strategy: get the last char of 'dx', then convert to ASCII
+; Numeric ASCII values: '0' (ASCII 0x30) to '9' (0x39), so just add 0x30 to byte N.
+; For alphabetic characters A-F: 'A' (ASCII 0x41) to 'F' (0x46) we'll add 0x40
+; Then, move the ASCII byte to the correct position on the resulting string
+hex_loop:
+    cmp cx, 4 ; loop 4 times
+    je end
     
-    ; Calculate ASCII value
-    jmp rm_print_hex_loop_calc
+    ; 1. convert last char of 'dx' to ascii
+    mov ax, dx ; we will use 'ax' as our working register
+    and ax, 0x000f ; 0x1234 -> 0x0004 by masking first three to zeros
+    add al, 0x30 ; add 0x30 to N to convert it to ASCII "N"
+    cmp al, 0x39 ; if > 9, add extra 8 to represent 'A' to 'F'
+    jle step2
+    add al, 7 ; 'A' is ASCII 65 instead of 58, so 65-58=7
+    jmp step2
 
-rm_print_hex_loop_calc:
-    ; Copy number to 'ax'
-    mov ax, bx
+step2:
+    ; 2. get the correct position of the string to place our ASCII char
+    ; bx <- base address + string length - index of char
+    mov bx, HEX_OUT + 5 ; base + length
+    sub bx, cx  ; our index variable
+    mov [bx], al ; copy the ASCII char on 'al' to the position pointed by 'bx'
+    ror dx, 4 ; 0x1234 -> 0x4123 -> 0x3412 -> 0x2341 -> 0x1234
 
-    ; Isolate last 4 bits
-    and ax, 0x000f
-    
-    ; Add 0x30 for numbers
-    ; 0-9 have an ASCII value of 0x30 + n
-    add ax, 0x30
+    ; increment index and loop
+    add cx, 1
+    jmp hex_loop
 
-    ; For number we are done. 
-    cmp ax, 0x39
-    jle rm_print_hex_loop_write
+end:
+    ; prepare the parameter and call the function
+    ; remember that print receives parameters in 'bx'
+    mov bx, HEX_OUT
+    call rm_print
 
-    ; For letters (a-f) we have to add another 7 
-    ; since (a-f) have an ASCII value of 0x37 + n
-    add ax, 0x7
-
-    ; Now continue to the second step
-    jmp rm_print_hex_loop_write
-
-rm_print_hex_loop_write:
-    ; Get position of the current character
-    ; HEX_OUT + 5 is the address of the last character
-    mov dx, HEX_OUT
-    add dx, 0x5
-    
-    ; cx is the counter
-    ; dx - cx is the address of our current character
-    sub dx, cx
-
-    ; Write calculated ASCII value to the calculated position
-    mov [dx], ax 
-
-    ; Move to next 4 bits / next character
-    ror bx, 0x4
-
-    ; Increment counter and loop
-    add cx, 0x1
-    jmp rm_print_hex_end
-
-rm_print_hex_end:
-    ; Return saved register contents
     popa
-
-    ; Done
     ret
 
-; Print the number stored in 'bx' in hexadecimal followed by a new line
-rm_print_hexln:
-    ; Print the hex number
-    call rm_print_hex
-    
-    ; Print the new line and carriage return
-    call rm_print_nl
-
-    ; Done
-    ret
-
-; Reserve memory for string that can be manipulated
 HEX_OUT:
-    db "0x0000", 0 
+    db "0x0000", 0 ; reserve memory for our new string

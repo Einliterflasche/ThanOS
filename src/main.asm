@@ -1,29 +1,34 @@
 [BITS 16]
-; set memory offset
+; Set memory offset
 [org 0x7c00]
 
-; set screen interrupt mode
+; Set screen interrupt mode
 mov ah, 0x0e
 
-; set stack pointers
+; Set stack pointers
 mov bp, 0x8000
 mov sp, bp
 
+; Print the real mode boot message
 mov bx, RM_BOOT_MSG
-call rm_print
+call rm_println
 
-; set variables
+; Print a hex value
+mov dx, 0x1234
+call rm_print_hex
+
+; Set variables
 RM_BOOT_MSG:
     db "Starting in real mode...", 0
 
-; infinite loop
+; Infinite loop
 jmp $ 
 
-; imports after infinite loop so that they don't get executed on load
+; Imports after infinite loop so that they don't get executed on load
 %include "src/rm/print.asm"
 
-; fill with zeros
+; Fill with zeros
 times 510-($-$$) db 0
 
-; magic number
+; Magic number
 dw 0xaa55
