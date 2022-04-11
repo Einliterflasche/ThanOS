@@ -4,27 +4,38 @@
 ; Set memory offset
 [org 0x7c00]
 
-; Set screen interrupt mode
-mov ah, 0x0e
+jmp main
 
-; Set stack pointers
-mov bp, 0x8000
-mov sp, bp
+; Imports here (unreachable) so they don't get executed accidentally
+; Paths must be specified relative to the root directory
 
-; Print a hex value
-mov bx, 0x9fb3
-call rm_print_hex
+; print.asm contains real mode printing routines
+%include "src/rm/print.asm"
+
+; disk.asm contains real mode disk routines
+%include "src/rm/disk.asm"
+
+main:    
+    ; Set stack pointers
+    mov bp, 0x8000
+    mov sp, bp
+
+    ; Save boot drive
+    mov [BOOT_DRIVE], dl
+
+    ; Print starting message
+    mov bx, RM_BOOT_MSG
+    call rm_println
+
+    ; Infinite loop
+    jmp $ 
 
 ; Set variables
 RM_BOOT_MSG:
     db "Starting in real mode...", 0
 
-; Infinite loop
-jmp $ 
-
-; Imports after infinite loop so that they don't get executed on load
-; print.asm contains rm_print, rm_println and rm_print_hex routines
-%include "src/rm/print.asm"
+BOOT_DRIVE:
+    db 0x00
 
 ; Fill with zeros
 times 510-($-$$) db 0

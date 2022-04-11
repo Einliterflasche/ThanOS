@@ -132,7 +132,7 @@ rm_print_hex_loop_write:
 rm_print_hex_end:
     ; Print the manipulated string
     mov bx, HEX_OUT
-    call rm_println
+    call rm_print
 
     ; Return saved register contents
     popa
