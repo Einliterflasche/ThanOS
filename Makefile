@@ -27,3 +27,7 @@ kernel.bin: kernel/kernel_entry.o ${OBJ_FILES}
 	nasm $< -f bin -o $@
 
 force_recompile:
+
+clean:
+	rm -fr *.bin *.dis *.o image
+	rm -fr kernel/*.o boot/*.bin drivers/*.o
