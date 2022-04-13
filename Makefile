@@ -7,6 +7,7 @@ OBJ_FILES = ${C_SOURCES:.c=.o}
 	
 run: image
 	qemu-system-x86_64 image
+	make clean
 
 image: boot/main.bin kernel.bin
 	cat $^ > $@

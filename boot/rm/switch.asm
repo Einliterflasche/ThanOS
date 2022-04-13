@@ -30,12 +30,6 @@ init_pm:
     ; Update stack position
     mov ebp, 0x900000
     mov esp, ebp
-    
-    mov ebx, PM_INIT_MSG
-    call pm_print
 
     ; Continue in protected mode
     jmp pm_main
-
-PM_INIT_MSG:
-    db "Initialised 32-bit protected mode...", 0

@@ -32,6 +32,7 @@ rm_main:
     mov bx, RM_BOOT_MSG
     call rm_println
     
+    ; Load the kernel from disk while we can still use BIOS interrupts
     mov bx, KERNEL_OFFSET
     mov dh, 15
     mov dl, [BOOT_DRIVE]
@@ -45,13 +46,8 @@ rm_main:
 
 [BITS 32]
 
-%include "boot/pm/print.asm"
-
 pm_main:
-    ; Print boot message
-    mov ebx, PM_BOOT_MSG
-    call pm_print
-
+    ; Start the kernel
     call KERNEL_OFFSET
 
     ; Ininite loop
@@ -60,8 +56,6 @@ pm_main:
 ; Set global variables
 RM_BOOT_MSG:
     db "Starting in 16-bit real mode...", 0
-PM_BOOT_MSG:
-    db "Switched to 32-bit protected mode...", 0
 BOOT_DRIVE:
     ; Reserve byte for the boot drive index
     db 0x00
