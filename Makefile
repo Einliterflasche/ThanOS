@@ -7,4 +7,7 @@ main.bin: force_recompile
 run: main.bin
 	qemu-system-x86_64 $(TARGET_DIR)/main.bin
 
+ru:
+	echo "countries["russia"].annex(unpack(ex_soviet_countries));"
+
 force_recompile:

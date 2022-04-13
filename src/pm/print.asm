@@ -10,14 +10,14 @@ pm_print:
     pusha 
 
     ; 'ecx' contains the current video memory address
-    mov ecx, [VIDEO_MEMORY]
+    mov edx, VIDEO_MEMORY
 
     ; Begin loop
     jmp pm_print_loop
 
 pm_print_loop:
     ; Move current character into 'ax'
-    mov al, [ecx]
+    mov al, [ebx]
     mov ah, WHITE_ON_BLACK
     
     ; Check for the end of the string
@@ -25,11 +25,11 @@ pm_print_loop:
     je pm_print_end
 
     ; Move the current character into video memory
-    mov [ecx], ax
+    mov [edx], ax
 
     ; Go to next char of the string and to the next video memory address
     add ebx, 1
-    add ecx, 2 ; Every char takes 2 bytes in video memory
+    add edx, 2 ; Every char takes 2 bytes in video memory
 
     ; Loop again
     jmp pm_print_loop
