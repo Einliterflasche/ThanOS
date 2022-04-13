@@ -12,13 +12,13 @@ jmp rm_main
 ; Paths must be specified relative to the root directory
 
 ; print.asm contains real mode printing routines
-%include "src/rm/print.asm"
+%include "boot/rm/print.asm"
 
 ; disk.asm contains real mode disk routines
-%include "src/rm/disk.asm"
+%include "boot/rm/disk.asm"
 
 ; gdt.asm contains the gdt descriptor
-%include "src/rm/gdt.asm"
+%include "boot/rm/gdt.asm"
 
 rm_main:    
     ; Set stack pointers
@@ -41,11 +41,11 @@ rm_main:
     ; This will jump straight to pm_main
     jmp switch_to_pm
         
-%include "src/rm/switch.asm"
+%include "boot/rm/switch.asm"
 
 [BITS 32]
 
-%include "src/pm/print.asm"
+%include "boot/pm/print.asm"
 
 pm_main:
     ; Print boot message

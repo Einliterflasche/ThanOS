@@ -1,22 +1,29 @@
-SRC_DIR = src
 TARGET_DIR = target
 
-run: image
-	qemu-system-x86_64 $(TARGET_DIR)/image
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
-image: main.bin kernel.bin
-	cat $(TARGET_DIR)/main.bin $(TARGET_DIR)/kernel/kernel.bin > $(TARGET_DIR)/$@
+OBJ_FILES = ${C_SOURCES:.c=.o}
+	
+run: image
+	qemu-system-x86_64 image
+
+image: boot/main.bin kernel.bin
+	cat $^ > $@
 
 main.bin: force_recompile
 	nasm -f bin $(SRC_DIR)/main.asm -o $(TARGET_DIR)/$@
 
-kernel.bin: kernel.o kernel_entry.o
-	ld -m elf_i386 -o $(TARGET_DIR)/kernel/$@ -Ttext 0x1000 $(TARGET_DIR)/kernel/entry.o $(TARGET_DIR)/kernel/kernel.o --oformat binary
+kernel.bin: kernel/kernel_entry.o ${OBJ_FILES}
+	ld -m elf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
 
-kernel.o:
-	gcc -fno-pie -m32 -ffreestanding -c $(SRC_DIR)/kernel/kernel.c -o $(TARGET_DIR)/kernel/$@
+%.o: %.c ${HEADERS}
+	gcc -fno-pie -m32 -c $< -o $@
 
-kernel_entry.o:
-	nasm $(SRC_DIR)/kernel/entry.asm -f elf -o $(TARGET_DIR)/kernel/entry.o
+%.o: %.asm
+	nasm $< -f elf -o $@
+
+%.bin: %.asm 
+	nasm $< -f bin -o $@
 
 force_recompile:
