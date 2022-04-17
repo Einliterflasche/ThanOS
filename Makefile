@@ -16,10 +16,10 @@ main.bin: force_recompile
 	nasm -f bin $(SRC_DIR)/main.asm -o $(TARGET_DIR)/$@
 
 kernel.bin: kernel/kernel_entry.o ${OBJ_FILES}
-	ld -m elf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
+	ld -m elf_i386 -s -o $@ -Ttext 0x1000 $^ --oformat binary
 
-%.o: %.c ${HEADERS}
-	gcc -fno-pie -m32 -c $< -o $@
+%.o: %.c ${HEADERS} force_recompile
+	gcc -m32 -fno-pie -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
