@@ -1,6 +1,6 @@
 void main() {
     char* video_memory = (char*) 0xb8000;
-    char* msg = "Hello, World!";
+    const char* msg = "Hello, World!";
     for (int i = 0; msg[i] != 0; i++) {
         *video_memory = msg[i];
         video_memory += 2;
