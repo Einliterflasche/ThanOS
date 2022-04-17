@@ -24,7 +24,7 @@ rm_disk_read:
 
     ; Check if an error happend (if the carry bit is set)
     ; Is triggered even though everything seems to be OK
-    ; jc rm_disk_error_carry
+    jc rm_disk_error_carry
      
     ; Now we need the old dh value
     pop dx
