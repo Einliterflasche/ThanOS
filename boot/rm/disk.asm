@@ -31,6 +31,7 @@ rm_disk_read:
     ; Now we need the old dh value
     pop dx
 
+    ; Check if the error code is 0 (= no error occured)
     cmp ah, 0
     jne rm_disk_error
 
@@ -54,6 +55,7 @@ rm_disk_error:
     call rm_print
 
     mov bx, 0x0000
+
     mov bl, ah
     call rm_println_hex
 
@@ -66,4 +68,4 @@ rm_disk_error:
 RM_DISK_ERR_CARRY_MSG:
     db "An error occured while reading the disk (carry bit set)...", 0
 RM_DISK_ERR_MSG:
-    db "An error occured reading the disk...", 0
+    db "An error occured while reading the disk. Error code: ", 0

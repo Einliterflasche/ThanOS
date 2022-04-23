@@ -34,7 +34,7 @@ rm_main:
     
     ; Load the kernel from disk while we can still use BIOS interrupts
     mov bx, KERNEL_OFFSET
-    mov dh, 5
+    mov dh, 9
     mov dl, [BOOT_DRIVE]
     call rm_disk_read
 
