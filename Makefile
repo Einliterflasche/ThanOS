@@ -30,5 +30,4 @@ kernel/kernel.bin: kernel/kernel_entry.o ${OBJ_FILES}
 force_recompile:
 
 clean:
-	rm -fr *.bin *.dis *.o image
-	rm -fr kernel/*.o boot/*.bin drivers/*.o
+	find . -type f \( -name "*.bin" -or -name "*.o" -or -name "*.dis" -or -name "image" \) -delete
