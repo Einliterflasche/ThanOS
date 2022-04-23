@@ -10,15 +10,17 @@ rm_disk_read:
     mov ah, 0x02
 
     ; Select the 1st cylinder
-    mov ch, 0
-    ; Select the 1st side
-    mov dh, 0
-    ; Select the 1s sector
-    mov cl, 2
-    
-    ; Go on for 5 sectors
-    mov al, 5
+    mov ch, 0x00
 
+    ; Go on for 5 sectors
+    mov al, dh
+
+    ; Select the 1st side
+    mov dh, 0x00
+
+    ; Select the 2nd sector
+    mov cl, 0x02
+    
     ; Read from disk
     int 0x13    
 
@@ -29,10 +31,9 @@ rm_disk_read:
     ; Now we need the old dh value
     pop dx
 
-    ; Check if the correct number of sectors were read
-    cmp dh, al
-    je rm_disk_error
-    
+    cmp ah, 0
+    jne rm_disk_error
+
     ; Return saved register contents
     popa
 
@@ -42,9 +43,7 @@ rm_disk_read:
 rm_disk_error_carry:
     ; Print carry error msg
     mov bx, RM_DISK_ERR_CARRY_MSG
-    call rm_println
-
-    ret
+    call rm_print
 
     ; Stop execution
     jmp $
@@ -52,7 +51,13 @@ rm_disk_error_carry:
 rm_disk_error:
     ; Print an error message
     mov bx, RM_DISK_ERR_MSG
-    call rm_println
+    call rm_print
+
+    mov bx, 0x0000
+    mov bl, ah
+    call rm_println_hex
+
+    ret
 
     ; Inifite loop / stop execution
     jmp $

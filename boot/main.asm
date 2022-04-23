@@ -34,7 +34,7 @@ rm_main:
     
     ; Load the kernel from disk while we can still use BIOS interrupts
     mov bx, KERNEL_OFFSET
-    mov dh, 31
+    mov dh, 5
     mov dl, [BOOT_DRIVE]
     call rm_disk_read
 
@@ -59,6 +59,8 @@ RM_BOOT_MSG:
 BOOT_DRIVE:
     ; Reserve byte for the boot drive index
     db 0x00
+COMMA:
+    db ", ", 0
 
 ; Fill with zeros
 times 510-($-$$) db 0
