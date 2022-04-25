@@ -1,11 +1,11 @@
-#include "stdio.h"
+void print(char* msg) {
+    int** cursor = (int**) 0xb7f0;
+    *cursor = 0xb8000;
+    int* current = *current;
+    *current = 'X';
+}
 
 void main() {
-    volatile char* VIDEO_MEM = (volatile char*) 0xb8000;
     char* msg = "Hello World from kernel!";
-
-    while (*msg != 0) {
-        *VIDEO_MEM++ = *msg++;
-        *VIDEO_MEM++ = 0x0a;
-    }
+    print(msg);
 }
