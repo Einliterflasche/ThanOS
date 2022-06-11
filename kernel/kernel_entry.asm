@@ -1,6 +1,6 @@
 [BITS 32]
 [extern main]
 
-kernel_entry:
+_start:
     call main
     ret

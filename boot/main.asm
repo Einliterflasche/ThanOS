@@ -4,9 +4,12 @@
 ; Set memory offset
 [org 0x7c00]
 
+; Define kernel offset
 KERNEL_OFFSET equ 0x1000
 
-jmp rm_main
+; Skip imports
+_start: 
+    jmp rm_main
 
 ; Imports here (unreachable) so they don't get executed accidentally
 ; Paths must be specified relative to the root directory
@@ -31,7 +34,14 @@ rm_main:
     ; Print starting message
     mov bx, RM_BOOT_MSG
     call rm_println
-    
+
+	; Print boot drive
+	mov bx, RM_BOOT_DRIVE_MSG
+	call rm_print
+
+	mov bx, [BOOT_DRIVE]
+	call rm_println_hex
+
     ; Load the kernel from disk while we can still use BIOS interrupts
     mov bx, KERNEL_OFFSET
     mov dh, 9
@@ -56,11 +66,11 @@ pm_main:
 ; Set global variables
 RM_BOOT_MSG:
     db "Starting in 16-bit real mode...", 0
+RM_BOOT_DRIVE_MSG:
+    db "Detected boot drive: ", 0
 BOOT_DRIVE:
     ; Reserve byte for the boot drive index
     db 0x00
-COMMA:
-    db ", ", 0
 
 ; Fill with zeros
 times 510-($-$$) db 0

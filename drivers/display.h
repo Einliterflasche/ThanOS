@@ -9,6 +9,7 @@
 #define VGA_REG_DATA 0x3d5
 
 // Display function declerations
-int vga_get_cursor();
-
-
+int get_cursor_offset();
+void set_cursor_offset(int);
+void print_at(char*, int, int);
+void print(char*);

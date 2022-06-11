@@ -6,7 +6,7 @@ HEADERS = $(wildcard kernel/*.h drivers/*.h)
 OBJ_FILES = ${C_SOURCES:.c=.o}
 	
 run: image
-	qemu-system-x86_64 -drive file=image,format=raw
+	qemu-system-x86_64 -drive file=image,format=raw -display curses
 	make clean
 
 image: boot/main.bin kernel/kernel.bin

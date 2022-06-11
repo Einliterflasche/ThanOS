@@ -1,32 +1,28 @@
 ; Read dh disk sectors to es:bx
 rm_disk_read:
-    ; Save register contents
+    ; Save all register contents
     pusha
-   
     ; Save dx contents seperately
     push dx
 
+    ;; Prepare settings
     ; Set BIOS 0x13 mode to read disk
     mov ah, 0x02
-
     ; Select the 1st cylinder
     mov ch, 0x00
-
     ; Go on for 5 sectors
     mov al, dh
-
     ; Select the 1st side
     mov dh, 0x00
-
     ; Select the 2nd sector
     mov cl, 0x02
     
     ; Read from disk
     int 0x13    
 
-    ; Check if an error happend (if the carry bit is set)
-    ; Is triggered even though everything seems to be OK
-    jc rm_disk_error_carry
+    ;; Checking for errors
+    ; An error occured if the carry bit is set
+    ; jc rm_disk_error_carry
      
     ; Now we need the old dh value
     pop dx
