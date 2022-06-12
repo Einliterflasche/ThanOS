@@ -7,7 +7,7 @@ int calc_row(int);
 int calc_col(int);
 int print_char_at(char, int, int, char);
 
-/* Public kernel functions*/
+/* Public kernel functions */
 void print_at(char* message, int row, int col) {
 	for(int i = 0; message[i] != 0; i++) {
 		int offset = print_char_at(message[i], row, col, VGA_WHITE_ONE_BLACK);
@@ -18,6 +18,10 @@ void print_at(char* message, int row, int col) {
 
 void print(char* message) {
 	print_at(message, -1, -1);
+}
+
+void printf_at(char* msg, int row, int col, ...) {
+	return;
 }
 
 /* Local functions */
