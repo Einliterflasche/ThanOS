@@ -6,6 +6,7 @@ int calc_offset(int, int);
 int calc_row(int);
 int calc_col(int);
 int print_char_at(char, int, int, char);
+void replace_hex(char*, int);
 
 /* Public kernel functions */
 void print_at(char* message, int row, int col) {
@@ -20,11 +21,44 @@ void print(char* message) {
 	print_at(message, -1, -1);
 }
 
-void printf_at(char* msg, int row, int col, ...) {
-	return;
+void print_char(char c) {
+	print_char_at(c, -1, -1, VGA_WHITE_ONE_BLACK);
+}
+
+/**
+ * Print a string but replace the empty curly braces with a number
+ */
+void print_hex(char* message, int num) {
+	for(int i = 0; message[i] != 0; i++) {
+		// Check for curly braces
+		if (message[i] == '{' && message[i + 1] == '}') {
+			// Print the number
+			char* temp = "0x00000000";
+			replace_hex(temp, num);
+			print(temp);
+			continue;
+		}
+		if (message[i] == '}' && message[i - 1] == '{') {
+			continue;
+		}
+		// Otherwise simply print the current character
+		print_char(message[i]);
+	}
 }
 
 /* Local functions */
+void replace_hex(char* dest, int num) {
+	for(int i = 2; i < 10; i++) {
+		char curr = (char) num && 0x00000001;
+		curr += '0';
+		if (curr <= '9') {
+			curr += ('A' - '0');
+		}
+		dest[i] = curr;
+		num = num >> 4;
+	}
+}
+
 int print_char_at(char character, int row, int col, char attribute) {
     unsigned char * video_mem = (unsigned char*) VGA_ADDRESS;
     

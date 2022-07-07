@@ -13,3 +13,5 @@ int get_cursor_offset();
 void set_cursor_offset(int);
 void print_at(char*, int, int);
 void print(char*);
+void print_hex(char*, int);
+void print_char(char);
