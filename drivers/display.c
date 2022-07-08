@@ -6,7 +6,7 @@ int calc_offset(int, int);
 int calc_row(int);
 int calc_col(int);
 int print_char_at(char, int, int, char);
-void replace_hex(char*, int);
+void replace_hex(unsigned char*, unsigned int);
 
 /* Public kernel functions */
 void print_at(char* message, int row, int col) {
@@ -33,7 +33,7 @@ void print_hex(char* message, int num) {
 		// Check for curly braces
 		if (message[i] == '{' && message[i + 1] == '}') {
 			// Print the number
-			char* temp = "0x00000000";
+			char* temp = "0x12345678";
 			replace_hex(temp, num);
 			print(temp);
 			continue;
@@ -47,15 +47,15 @@ void print_hex(char* message, int num) {
 }
 
 /* Local functions */
-void replace_hex(char* dest, int num) {
-	for(int i = 2; i < 10; i++) {
-		char curr = (char) num && 0x00000001;
+void replace_hex(unsigned char* dest, unsigned int num) {
+	for(int i = 0; i < 8; i++) {
+		char curr = num >> (i * 4);
+		curr = curr & 0xf;
 		curr += '0';
-		if (curr <= '9') {
-			curr += ('A' - '0');
+		if (curr > '9') {
+			curr += 'A' - '9' - 1; 
 		}
-		dest[i] = curr;
-		num = num >> 4;
+		dest[9 - i] = curr;
 	}
 }
 

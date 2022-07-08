@@ -9,13 +9,13 @@ run: image
 	qemu-system-x86_64 -drive file=image,format=raw -display curses
 	make clean
 
-image: boot/main.bin kernel/kernel.bin
+image: boot/main.bin kernel/main.bin
 	cat $^ > $@
 
 main.bin: force_recompile
 	nasm -f bin $(SRC_DIR)/main.asm -o $(TARGET_DIR)/$@
 
-kernel/kernel.bin: kernel/kernel_entry.o ${OBJ_FILES}
+kernel/main.bin: kernel/kernel_entry.o ${OBJ_FILES}
 	ld -m elf_i386 -s -o $@ -Ttext 0x1000 $^ --oformat binary
 
 %.o: %.c ${HEADERS} force_recompile

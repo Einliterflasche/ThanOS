@@ -7,7 +7,7 @@
     ; Load the global descriptor table
     lgdt [gdt_descriptor]
 
-    ; Set first bit in special register to 1
+    ; Set first bit in special register to 1 to switch to protected mode
     mov eax, cr0
     or eax, 0x1
     mov cr0, eax
@@ -15,7 +15,7 @@
     ; Far jump to flush the CPU pipeline
     jmp CODE_SEG:init_pm
 
- [BITS 32]
+[BITS 32]
 
 ; Initialise registers and stack
 init_pm:

@@ -1,8 +1,7 @@
 #include "../drivers/display.h"
 
-int main() {
+void main() {
     char* msg = "Hello, Kernel! {}";
-	int num = 0x12345678;
+	int num = 0x123B5678;
 	print_hex(msg, num);
-	return 0;
 }

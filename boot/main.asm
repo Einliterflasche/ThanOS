@@ -1,17 +1,21 @@
-; Generate 16 bit instructions
+;; Settings
+
+; Tell the compiler to generate 16 bit instructions
 [BITS 16]
-
-; Set memory offset
+; Tell the compiler to apply a general memory offset unless specified otherwise
 [org 0x7c00]
-
-; Define kernel offset
+; Define a constant offset for the kernel in memory for easier use
 KERNEL_OFFSET equ 0x1000
 
-; Skip imports
-_start: 
-    jmp rm_main
+;; Start of the actual code
+_main:
+	; Execute the 16 bit instructions
+	jmp rm_main
 
-; Imports here (unreachable) so they don't get executed accidentally
+;; Imports
+
+; Since we jump to rm_main these will not get executed on load 
+; but are still available for later use
 ; Paths must be specified relative to the root directory
 
 ; print.asm contains real mode printing routines
@@ -23,57 +27,61 @@ _start:
 ; gdt.asm contains the gdt descriptor
 %include "boot/rm/gdt.asm"
 
+;; 16 bit main
 rm_main:    
-    ; Set stack pointers
+    ; Initialize the stack pointers
     mov bp, 0x8000
     mov sp, bp
 
     ; Save boot drive
     mov [BOOT_DRIVE], dl
 
-    ; Print starting message
+    ; Print the first message
     mov bx, RM_BOOT_MSG
     call rm_println
 
-	; Print boot drive
+	; Print the boot drive index
 	mov bx, RM_BOOT_DRIVE_MSG
 	call rm_print
-
 	mov bx, [BOOT_DRIVE]
 	call rm_println_hex
 
     ; Load the kernel from disk while we can still use BIOS interrupts
     mov bx, KERNEL_OFFSET
-    mov dh, 9
+    mov dh, 10
     mov dl, [BOOT_DRIVE]
     call rm_disk_read
 
-    ; Switch to 32-bit protected mode
+    ;; Switch to 32-bit protected mode
     ; This will jump straight to pm_main
     jmp switch_to_pm
         
 %include "boot/rm/switch.asm"
 
+; Tell the compiler to generate 32 bit instructions
 [BITS 32]
 
+;; This is the entry point for protected mode
 pm_main:
     ; Start the kernel
     call KERNEL_OFFSET
+	; Infinite loop incase the kernel finishes (for whatever reason)
+	jmp $
 
-    ; Ininite loop
-    jmp $
+;; Set global variables
 
-; Set global variables
+; This contains the first boot message
 RM_BOOT_MSG:
     db "Starting in 16-bit real mode...", 0
+; This contains the message used to print the boot drive number
 RM_BOOT_DRIVE_MSG:
     db "Detected boot drive: ", 0
+; This contains the number of the boot drive and reserves a byte of memory for it
 BOOT_DRIVE:
-    ; Reserve byte for the boot drive index
     db 0x00
 
-; Fill with zeros
+; Fill the rest of the sector with zeros
 times 510-($-$$) db 0
 
-; Magic number
+; Use the magic number to tell the BIOS that this is a bootloader
 dw 0xaa55
