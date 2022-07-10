@@ -19,7 +19,7 @@ kernel/main.bin: kernel/kernel_entry.o ${OBJ_FILES}
 	ld -m elf_i386 -s -o $@ -Ttext 0x1000 $^ --oformat binary
 
 %.o: %.c ${HEADERS} force_recompile
-	gcc -m32 -ffreestanding -fno-pie -c $< -o $@
+	i686-elf-gcc -m32 -ffreestanding -fno-pie -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
