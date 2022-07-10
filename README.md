@@ -12,7 +12,7 @@ This project is not supposed to be any good, I am just experimenting with OS dev
 ### Requirements
  - `nasm` for compiling the assembly code
  - `build-essentials` for linking
- - `i686-elf-gcc` for compiling the C code. This is a GCC cross compiler configured for the `i686-elf` target. If you have not already, you will need to [build it yourself](wiki.osdev.org/GCC_Cross-Compiler)
+ - `i686-elf-gcc` for compiling the C code. This is a GCC cross compiler configured for the `i686-elf` target. If you have not already, you will need to [build it yourself](https://wiki.osdev.org/GCC_Cross-Compiler)
  - `qemu-system-x86_64` for emulating the OS (optional)
 
 ### Steps
