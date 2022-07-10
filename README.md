@@ -16,6 +16,6 @@ This project is not supposed to be any good, I am just experimenting with OS dev
  - `qemu-system-x86_64` for emulating the OS (optional)
 
 ### Steps
- - First run `make image` which will output the full os image into the root directory
+ - First run `make image` which will output the OS image into the root directory
  - You can run this image on an emulator of your choice. If you chose QEMU you may run `make run` to start the emulation. This also automatically (re-)builds the image.
 
