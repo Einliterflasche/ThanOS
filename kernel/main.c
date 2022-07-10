@@ -1,11 +1,12 @@
 #include "../drivers/display.h"
 
 #if defined(__linux__)
-#warning "`__linux__` is defined; not using cross compiler"
+#warning "`__linux__` is defined: not using a cross compiler"
 #endif
 
 void main() {
-    char* msg = "Hello, Kernel! {}";
-	int num = 0x123B5678;
+	char* msg = "Hello, Kernel! Here is a number: {}";
+	unsigned int num = 0x1234abcd;
 	print_hex(msg, num);
 }
+
