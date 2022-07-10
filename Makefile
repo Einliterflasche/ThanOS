@@ -19,7 +19,7 @@ kernel/main.bin: kernel/kernel_entry.o ${OBJ_FILES}
 	ld -m elf_i386 -s -o $@ -Ttext 0x1000 $^ --oformat binary
 
 %.o: %.c ${HEADERS} force_recompile
-	gcc -m32 -fno-pie -c $< -o $@
+	gcc -m32 -ffreestanding -fno-pie -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
@@ -27,7 +27,7 @@ kernel/main.bin: kernel/kernel_entry.o ${OBJ_FILES}
 %.bin: %.asm 
 	nasm $< -f bin -o $@
 
-force_recompile:
-
 clean:
 	find . -type f \( -name "*.bin" -or -name "*.o" -or -name "*.dis" -or -name "image" \) -delete
+
+force_recompile:
