@@ -1,11 +1,11 @@
 # SauceOS
 This project is not supposed to be any good, I am just experimenting with OS development.
 
-## Progress
- - Bootloader which 
+## Progress/Features
+ - a bootloader which 
      - switches to 32-bit protected mode 
 	 - loads the kernel
- - Very basic VGA display driver
+ - a very basic VGA display driver
 
 ## Build it yourself
 
