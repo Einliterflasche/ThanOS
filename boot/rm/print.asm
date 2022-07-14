@@ -38,7 +38,7 @@ rm_print_end:
 ; Print just a new line
 rm_print_nl:
     ; Save register contents
-    pusha
+    push ax
 
     ; Set 0x10 interruption mode to tele-type
     mov ah, 0x0e
@@ -52,7 +52,7 @@ rm_print_nl:
     int 0x10
 
     ; Return saved register contents
-    popa
+    pop ax
 
     ; Done
     ret
@@ -74,7 +74,7 @@ rm_print_hex:
     pusha
 
     ; Initiate the counter
-    mov cx, 0x0000
+    mov cx, 0
 
     ; Start looping
     jmp rm_print_hex_loop

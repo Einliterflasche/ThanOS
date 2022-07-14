@@ -6,17 +6,17 @@ rm_disk_read:
     push dx
 
     ;; Prepare settings
-    ; Set BIOS 0x13 mode to read disk
+	; al = number of sectors
+	; ah = interruption type (read disk)
+	; cl = sector number
+	; ch = track/cylinder
+	; dl = drive number
+	; dh = head number
+	; es:bx = buffer address 
     mov ah, 0x02
-    ; Select the 1st cylinder
     mov ch, 0x00
-    ; Go on for 5 sectors
     mov al, dh
-    ; Select the 1st side
     mov dh, 0x00
-    ; Select the 2nd sector
-    mov cl, 0x02
-    
     ; Read from disk
     int 0x13    
 

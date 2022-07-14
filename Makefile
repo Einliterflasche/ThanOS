@@ -1,5 +1,3 @@
-TARGET_DIR = target
-
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
@@ -9,17 +7,17 @@ run: image
 	qemu-system-x86_64 -drive file=image,format=raw -display curses
 	make clean
 
-image: boot/main.bin kernel/main.bin
+image: boot/bootloader.bin kernel/main.bin
 	cat $^ > $@
 
-main.bin: force_recompile
-	nasm -f bin $(SRC_DIR)/main.asm -o $(TARGET_DIR)/$@
+boot/bootloader.bin: boot/entry.bin boot/main.bin
+	cat $^ > $@
 
-kernel/main.bin: kernel/kernel_entry.o ${OBJ_FILES}
-	ld -m elf_i386 -s -o $@ -Ttext 0x1000 $^ --oformat binary
+kernel/main.bin: boot/kernel_entry.o ${OBJ_FILES}
+	ld -m elf_i386 -s -o $@ -Ttext 0x1e00 $^ --oformat binary
 
 %.o: %.c ${HEADERS} force_recompile
-	i686-elf-gcc -m32 -ffreestanding -fno-pie -c $< -o $@
+	i686-elf-gcc -m32 -Os -ffreestanding -fno-pie -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@
