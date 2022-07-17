@@ -47,9 +47,6 @@ rm_main:
 	mov cl, 0x09
     call rm_disk_read
 
-	mov bx, [KERNEL_OFFSET]
-	call rm_println_hex
-	
     ;; Switch to 32-bit protected mode
     ; This will jump straight to pm_main
     jmp switch_to_pm

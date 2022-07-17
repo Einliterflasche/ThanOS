@@ -1,5 +1,6 @@
 #include "ports.h"
 #include "display.h"
+#include "../kernel/util.h"
 
 /* Declare local functions */
 int calc_offset(int, int);
@@ -33,7 +34,7 @@ void print_hex(char* message, int num) {
 		// Check for curly braces
 		if (message[i] == '{' && message[i + 1] == '}') {
 			// Print the number
-			char* temp = "0x12345678";
+			char* temp = "0x00000000";
 			replace_hex(temp, num);
 			print(temp);
 			continue;
@@ -76,13 +77,30 @@ int print_char_at(char character, int row, int col, char attribute) {
     }
 
 	// Check for '\n'
-	if (character == 0xA) {
+	if (character == '\n') {
 		row = calc_row(offset) + 1;
-		offset = calc_offset(0, row);
+		offset = calc_offset(row, 0);
 	} else {
 		*(video_mem + offset) = character;
 		*(video_mem + offset + 1) = attribute;
 		offset += 2;
+	}
+
+	// Scroll
+	if (offset >= VGA_MAX_ROWS * VGA_MAX_COLS * 2) {
+		// Move everything up one row
+		for (int i = 1; i < VGA_MAX_ROWS; i++) 
+			memory_copy(
+					(char*) VGA_ADDRESS + calc_offset(i, 0),
+					(char*) VGA_ADDRESS + calc_offset(i - 1, 0),
+					VGA_MAX_COLS * 2
+			);
+		
+		// Clean last line
+		char* last_line = (char*) VGA_ADDRESS + calc_offset(VGA_MAX_ROWS - 1, 0);
+		for (int i = 0; i < VGA_MAX_COLS * 2; i++) 
+			last_line[i] = 0;
+		
 	}
 
 	set_cursor_offset(offset);
