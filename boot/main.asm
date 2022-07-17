@@ -43,7 +43,7 @@ rm_main:
 	; Read 9 sectors
 	; Start from sectors 9 (1 = first stage, 2-8 = second stage)
     mov bx, KERNEL_OFFSET
-    mov dh, 10
+    mov dh, 3
 	mov cl, 0x09
     call rm_disk_read
 
