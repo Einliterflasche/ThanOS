@@ -7,7 +7,7 @@ int calc_offset(int, int);
 int calc_row(int);
 int calc_col(int);
 int print_char_at(char, int, int, char);
-void replace_hex(unsigned char*, unsigned int);
+void hex_to_ascii(unsigned char*, unsigned int);
 
 /* Public kernel functions */
 void print_at(char* message, int row, int col) {
@@ -26,16 +26,13 @@ void print_char(char c) {
 	print_char_at(c, -1, -1, VGA_WHITE_ONE_BLACK);
 }
 
-/**
- * Print a string but replace the empty curly braces with a number
- */
 void print_hex(char* message, int num) {
 	for(int i = 0; message[i] != 0; i++) {
 		// Check for curly braces
 		if (message[i] == '{' && message[i + 1] == '}') {
 			// Print the number
 			char* temp = "0x00000000";
-			replace_hex(temp, num);
+			hex_to_ascii(temp, num);
 			print(temp);
 			continue;
 		}
@@ -48,7 +45,7 @@ void print_hex(char* message, int num) {
 }
 
 /* Local functions */
-void replace_hex(unsigned char* dest, unsigned int num) {
+void hex_to_ascii(unsigned char* dest, unsigned int num) {
 	for(int i = 0; i < 8; i++) {
 		char curr = num >> (i * 4);
 		curr = curr & 0xf;
@@ -101,6 +98,7 @@ int print_char_at(char character, int row, int col, char attribute) {
 		for (int i = 0; i < VGA_MAX_COLS * 2; i++) 
 			last_line[i] = 0;
 		
+		offset -= VGA_MAX_COLS * 2;
 	}
 
 	set_cursor_offset(offset);
