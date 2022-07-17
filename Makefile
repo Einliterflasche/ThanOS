@@ -16,7 +16,7 @@ boot/bootloader.bin: boot/entry.bin boot/main.bin
 	cat $^ > $@
 
 kernel/main.bin: boot/kernel_entry.o ${OBJ_FILES}
-	ld -m elf_i386 -s -o $@ -Ttext 0x1e00 $^ --oformat binary
+	i686-elf-ld -s -o $@ -Ttext 0x1e00 $^ --oformat binary
 
 %.o: %.c ${HEADERS} force_recompile
 	i686-elf-gcc -I$(ROOT_DIR) -L$(ROOT_DIR) -c $< -o $@
@@ -28,6 +28,6 @@ kernel/main.bin: boot/kernel_entry.o ${OBJ_FILES}
 	nasm $< -f bin -o $@
 
 clean:
-	find . -type f \( -name "*.bin" -or -name "*.o" -or -name "*.dis" -or -name "image" \) -delete
+	rm -rf **/*.bin **/*.o image
 
 force_recompile:
