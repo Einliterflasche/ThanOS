@@ -1,6 +1,6 @@
 #include "ports.h"
 #include "display.h"
-#include "../kernel/util.h"
+#include <kernel/util.h>
 
 /* Declare local functions */
 int calc_offset(int, int);

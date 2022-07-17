@@ -1,3 +1,5 @@
+ROOT_DIR = $(shell pwd)
+
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
@@ -17,7 +19,7 @@ kernel/main.bin: boot/kernel_entry.o ${OBJ_FILES}
 	ld -m elf_i386 -s -o $@ -Ttext 0x1e00 $^ --oformat binary
 
 %.o: %.c ${HEADERS} force_recompile
-	i686-elf-gcc -c $< -o $@
+	i686-elf-gcc -I$(ROOT_DIR) -L$(ROOT_DIR) -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@

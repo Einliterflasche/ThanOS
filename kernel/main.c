@@ -1,6 +1,7 @@
-#include "../drivers/display.h"
+#include <cmn/typedef.h>
+#include <drivers/display.h>
 
-#if defined(__linux__)
+#ifdef __linux__
 #warn "`__linux__` is defined, not using a cross compiler. Proceed with caution"
 #endif
 
