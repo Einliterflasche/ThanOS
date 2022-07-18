@@ -1,5 +1,5 @@
-# SauceOS
-This project is not supposed to be any good, I am just experimenting with OS development.
+# ThanOS
+An OS for x86_64 (though only 32 bit atm). This project is not supposed to be any good, I am just experimenting with OS development.
 
 ## Progress/Features
  - a bootloader which 
