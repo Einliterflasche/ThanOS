@@ -1,4 +1,3 @@
-#include <cmn/typedef.h>
 #include <drivers/display.h>
 
 #ifdef __linux__
