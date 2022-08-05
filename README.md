@@ -6,6 +6,7 @@ An OS for x86_64 (though only 32 bit atm). This project is not supposed to be an
      - switches to 32-bit protected mode 
 	 - loads the kernel
  - a very basic VGA display driver
+ - Paging (coming soon)
 
 ## Build it yourself
 
