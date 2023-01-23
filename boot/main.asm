@@ -56,8 +56,16 @@ rm_main:
 ; Generate 32 bit instructions
 [BITS 32]
 
+%include "boot/pm/cpuid.asm"
+%include "boot/pm/switch.asm"
+
 ;; This is the entry point for protected mode
 pm_main:
+    call check_cpuid
+    call check_long_mode
+
+    ; call enter_long_mode
+
     ; Start the kernel
     call KERNEL_OFFSET
 	; Infinite loop incase the kernel finishes (for whatever reason)
