@@ -3,3 +3,7 @@
 .ccls-cache/
 image
 .vscode/
+
+# Added by cargo
+
+/target
